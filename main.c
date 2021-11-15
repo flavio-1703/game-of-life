@@ -11,18 +11,21 @@
 #define DEAD  0
 #define ALIVE 1
 
-// FUNCS
+//function deeclarations 
 void delay( uint32_t milliseconds );
 void print_grid( uint8_t grid[][HEIGHT] );
 void game( uint8_t grid[][HEIGHT] );
 uint8_t count_neighbors( uint8_t grid[][HEIGHT], uint32_t x, uint32_t y );
 static void load_grid_from_file();
 
-int main( void ) {
-  // INIT GRID
+int 
+main( void ) 
+{
+  //init the grid by reading from a file
   uint8_t grid[WIDTH][HEIGHT];
   load_grid_from_file(grid, "grid.txt");
-
+  
+  //main loop
   while (1) {
     system("clear");
     print_grid(grid);
@@ -33,9 +36,10 @@ int main( void ) {
   return 0;
 }
 
-// LOAD GRID FROM FILE
-static void load_grid_from_file( uint8_t grid[][HEIGHT],  const char * filename ) {
-  FILE * file;
+static void 
+load_grid_from_file( uint8_t grid[][HEIGHT],  const char * filename ) 
+{
+  FILE *file;
   char *line, *number;
   uint32_t i = 0, j;
   file = fopen(filename, "r");
@@ -54,8 +58,8 @@ static void load_grid_from_file( uint8_t grid[][HEIGHT],  const char * filename 
   fclose(file);
 }
 
-// DELAY TIME
-void delay( uint32_t milliseconds )
+void 
+delay( uint32_t milliseconds )
 {
     uint64_t pause;
     clock_t now,then;
@@ -67,7 +71,9 @@ void delay( uint32_t milliseconds )
 }
 
 // PRINT ARRAY
-void print_grid( uint8_t grid[][HEIGHT] ) {
+void 
+print_grid( uint8_t grid[][HEIGHT] ) 
+{
   for (uint32_t i = 0; i < WIDTH; i++){
     for (uint32_t j = 0; j < HEIGHT; j++) {
       if (grid[i][j] == ALIVE)
@@ -80,8 +86,9 @@ void print_grid( uint8_t grid[][HEIGHT] ) {
   }   
 }
 
-// RETURNS THE NUMBER OF NEIGHBORS
-uint8_t count_neighbors( uint8_t grid[][HEIGHT], uint32_t x, uint32_t y ) {
+//finds the number of neighbors
+uint8_t 
+count_neighbors( uint8_t grid[][HEIGHT], uint32_t x, uint32_t y ) {
   uint8_t sum = 0;
   for (int32_t i = -1; i < 2; i++){
     for (int32_t j = -1; j < 2; j++) {
@@ -94,16 +101,14 @@ uint8_t count_neighbors( uint8_t grid[][HEIGHT], uint32_t x, uint32_t y ) {
   return sum;
 }
 
-// APPLY GAME RULES
-void game( uint8_t grid[][HEIGHT] ) {
+void 
+game( uint8_t grid[][HEIGHT] ) {
   uint8_t next[WIDTH][HEIGHT];
-  //COMPUTE NEXT GEN
   for (uint32_t i = 0; i < WIDTH; i++){
     for (uint32_t j = 0; j < HEIGHT; j++) {
       uint8_t state = grid[i][j];
-      //CHECK IF THE CELL IS ON THE EDGE 
       uint8_t neighbors = count_neighbors(grid, i, j);
-      //RULES
+      //apply the rules 
       if (state == DEAD && neighbors == 3) 
         next[i][j] = ALIVE;
       else if (state == ALIVE && (neighbors < 2 || neighbors > 3)) 
